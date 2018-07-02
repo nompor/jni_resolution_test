@@ -1,2 +1,2 @@
-java -classpath %CD%\nompor-lib.jar; Test
+java Test
 pause
