@@ -12,27 +12,27 @@ DEVMODE* defaultMode = nullptr;
 
 JNIEXPORT void JNICALL Java_Test_change
 (JNIEnv *, jobject, jint w, jint h) {
-
-
-	if (isActive) return;
-
-	if (defaultMode == nullptr) {
-		defaultMode = new DEVMODE();
-		EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, defaultMode);
-	}
-
-	DEVMODE dm;
-	EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &dm);
-	dm.dmPelsWidth = w;
-	dm.dmPelsHeight = h;
-	isActive = ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL;
-
+    
+    
+    if (isActive) return;
+    
+    if (defaultMode == nullptr) {
+        defaultMode = new DEVMODE();
+        EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, defaultMode);
+    }
+    
+    DEVMODE dm;
+    EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &dm);
+    dm.dmPelsWidth = w;
+    dm.dmPelsHeight = h;
+    isActive = ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL;
+    
 }
 
 JNIEXPORT void JNICALL Java_Test_end
 (JNIEnv *, jobject) {
-	if (!isActive) return;
-	isActive = ChangeDisplaySettings(defaultMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL;
+    if (!isActive) return;
+    isActive = ChangeDisplaySettings(defaultMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL;
 }
 
 #endif // !_WIN64
@@ -67,13 +67,14 @@ JNIEXPORT void JNICALL Java_Test_change
     if ( target != nullptr ) {
         isActive = CGDisplaySetDisplayMode(displayId, target, nullptr) == kCGErrorSuccess;
     }
+    CFRelease(arr);
 }
 
 JNIEXPORT void JNICALL Java_Test_end
 (JNIEnv *, jobject) {
     if (!isActive) return;
     CGDirectDisplayID displayId = CGMainDisplayID();
-    CGDisplaySetDisplayMode(displayId, defaultMode, nullptr);
+    isActive = CGDisplaySetDisplayMode(displayId, defaultMode, nullptr) != kCGErrorSuccess;
 }
 #endif // !__APPLE_
 
